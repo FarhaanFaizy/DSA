@@ -1,0 +1,56 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+int top=-1;
+char st[100];
+void push(char item)
+{
+    if(top>=99)
+        printf("\nStack overflow");
+    else
+    {
+        top++;
+        st[top]=item;
+    }
+}
+char pop()
+{
+    char item;
+    if(top==-1)
+        printf("Stack empty");
+    else
+    {
+        item=st[top];
+        st[top]='\0';
+        top--;
+        return item;
+    }
+}
+void printstack()
+{
+    if(top!=-1)
+    {
+        printf("\nElements in the stack are:");
+        for(int i=0;i<=top;i++)
+            printf("%c ",st[i]);
+    }
+    else
+        printf("\nStack is empty");
+}
+int main()
+{
+    int i=0;
+    char a;
+    while(i<3)
+    {
+        printf("\nEnter :");
+        scanf("%c",&a);
+        getchar();
+        push(a);
+        i++;
+    }
+    printstack();
+    for(i=0;i<3;i++)
+    pop();
+    printstack();
+}

@@ -1,0 +1,104 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<ctype.h>
+int top=-1,pf=0;
+char st[100],inf[100],pos[100];
+void push(char item)
+{
+    if(top>=99)
+        printf("\nStack overflow");
+    else
+        st[++top]=item;
+}
+char pop()
+{
+    char item;
+    if(top==-1)
+        printf("Stack empty");
+    else
+    {
+        item=st[top];
+        st[top--]='\0';
+        return item;
+    }
+}
+int isOp(char a)
+{
+    if(a=='^'||a=='*'||a=='/'||a=='+'||a=='-')
+		return 1;
+	else
+	    return 0;
+}
+int prior(char a)
+{
+    if(a=='^')
+        return 3;
+    if(a=='*'||a=='/')
+        return 2;
+    if(a=='+'||a=='-')
+        return 1;
+}
+void infix_to_postfix()
+{
+    int i=0;
+    char a,x;
+    push('(');
+    strcat(inf,")");
+    a=inf[i];
+    while(a!='\0')
+    {
+        if(a=='(')
+			push(a);
+		else if( isdigit(a) || isalpha(a))
+			pos[pf++] = a;
+		else if(isOp(a) == 1)
+		{
+			x=pop();
+			while(isOp(x) == 1 && prior(x)>= prior(a))
+			{
+				pos[pf++] = x;
+				x = pop();
+			}
+			push(x);
+			push(a);
+		}
+		else if(a== ')')
+		{
+			x = pop();
+			while(x != '(')
+			{
+				pos[pf++] = x;
+				x = pop();
+			}
+		}
+		else
+		{
+			printf("\nInvalid infix Expression.\n");
+			getchar();
+			exit(1);
+		}
+		i++;
+		a= inf[i];
+	}
+	if(top>0)
+	{
+		printf("\nInvalid infix Expression.\n");
+		getchar();
+		exit(1);
+	}
+	if(top>0)
+	{
+		printf("\nInvalid infix Expression.\n");
+		getchar();
+		exit(1);
+	}
+	pos[pf] = '\0';
+}
+int main()
+{
+    printf("\nEnter Infix Expression:");
+    scanf("%s",inf);
+    infix_to_postfix();
+    printf("postfix expression: %s",pos);
+}

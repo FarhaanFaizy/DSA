@@ -1,0 +1,52 @@
+#include <stdio.h>
+int main() {
+    int n,i;
+    float val[10],profit=0,pr[10],w[10],b;
+    printf("\nEnter Bag Weight:");
+    scanf("%f",&b);
+    printf("\nEnter number of items: ");
+    scanf("%d",&n);
+    for(int i=0;i<n;i++){
+        printf("\nEnter item %d - weight and profit:",i+1);
+        scanf("%f %f",&w[i],&pr[i]);
+        val[i]=pr[i]/w[i];
+    }
+    for(int i=0;i<n-1;i++){
+        for(int j=0;j<n-i-1;j++){
+            if (val[j]<val[j+1]){
+                int temp=val[j];
+                val[j]=val[j+1];
+                val[j+1]=temp;
+                
+                temp=pr[j];
+                pr[j]=pr[j+1];
+                pr[j+1]=temp;
+                
+                temp=w[j];
+                w[j]=w[j+1];
+                w[j+1]=temp;
+            }
+        }
+    }
+    for (i=0;i<n;i++){
+        if(w[i]<=b){
+            profit+=pr[i];
+            b=b-w[i];
+        }
+        else if(b>0){
+            profit+=(b/w[i])*pr[i];
+            b=0;
+        }
+    }
+    printf("\nFractional Knapsack");
+    printf("\nFinal Profit is %.2f",profit);
+}
+output:
+
+Enter Bag Weight:20
+Enter number of items: 3
+Enter item 1 - weight and profit:18 25
+Enter item 2 - weight and profit:15 24
+Enter item 3 - weight and profit:10 15
+Fractional Knapsack
+Final Profit is 31.50

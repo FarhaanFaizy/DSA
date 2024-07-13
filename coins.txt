@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <limits.h>
+void printArray(float a[],int n){
+    for(int i=0;i<n;i++)
+        printf("%d ",a[i]);
+    printf("\n");
+}
+int minCoinsUtil(int coins[], int n, int amount, int* dp)
+{
+    if (amount==0)
+        return 0;
+    if (dp[amount]!= -1)
+        return dp[amount];
+    int res=INT_MAX;
+    for(int i=0;i<n;i++){
+        if(coins[i]<=amount){
+            int sub_res=minCoinsUtil(coins,n,amount-coins[i],dp);
+            if(sub_res!=INT_MAX&&sub_res+1<res)
+                res=sub_res+1;
+        }
+    }
+    printf("Amount=%d ,dp=",amount);
+    printArray(dp,17);
+    dp[amount] = res;
+    return res;
+}
+int minCoins(int coins[], int n, int amount)
+{
+    int dp[amount + 1];
+    for (int i = 0; i <= amount; i++)
+        dp[i] = -1;
+    return minCoinsUtil(coins, n, amount, dp);
+}
+int main()
+{
+  int n;
+  printf("Enter the no. of kinds of coins:");
+  scanf("%d",&n);
+  int coins[n];
+  printf("\nEnter the values of coins (in non-increasing  order):");
+  for(int i=0;i<n;i++){
+    scanf("%d",&coins[i]);
+  }
+    int amount;
+    printf("\nEnter the Amount:");
+    scanf("%d",&amount);
+    int res = minCoins(coins, n, amount);
+    if (res == INT_MAX)
+        res = -1;
+    printf("Minimum coins required is %d", res);
+    return 0;
+}

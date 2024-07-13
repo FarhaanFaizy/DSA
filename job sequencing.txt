@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <stdlib.h>
+int main(){
+    int n,*job,*dl,*pr,*final,*finalpr,maxd=0,tot=0,k=0,l=0,temp;
+    printf("\nEnter the number of jobs:");
+    scanf("%d",&n);
+    job=(int*)malloc(n*sizeof(int));
+    pr=(int*)malloc(n*sizeof(int));
+    dl=(int*)malloc(n*sizeof(int));
+    printf("\nEnter profit array:");
+    for (int i=0;i<n;i++)
+        scanf("%d",&pr[i]);
+    printf("\nEnter deadline array:");
+    for (int i=0;i<n;i++){
+        job[i]=i+1;
+        scanf("%d",&dl[i]);
+        if (dl[i]>maxd)
+            maxd=dl[i];
+    }
+    final=(int*)malloc(maxd*sizeof(int));
+    finalpr=(int*)malloc(maxd*sizeof(int));
+    for (int i=0;i<n-1;i++){
+        for (int j=0;j<n-1-i;j++){
+            if ((dl[j]>dl[j+1])||((dl[j]==dl[j+1]) && (pr[j+1]>pr[j]))){
+                temp=pr[j];
+                pr[j]=pr[j+1];
+                pr[j+1]=temp;
+                temp=job[j];
+                job[j]=job[j+1];
+                job[j+1]=temp;
+                temp=dl[j];
+                dl[j]=dl[j+1];
+                dl[j+1]=temp;
+            }
+        }
+    }
+    for (int deadline=1;deadline<=maxd;k++){
+        if (deadline<=dl[k]){
+            final[l]=job[k];
+            finalpr[l++]=pr[k];
+            deadline++;
+        }
+    }
+    printf("\nOrder of jobs is:\nJob\t\tProfit\n");
+    for(int i=0;i<maxd;i++){
+        printf("job%d \t%d\n",final[i],finalpr[i]);
+        tot+=finalpr[i];
+    }
+    printf("Total : %d",tot);
+}

@@ -1,0 +1,146 @@
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct Node
+{
+    int data;
+    struct Node *l, *r;
+}Node;
+
+Node* createNode(int v)
+{
+    Node *newNode = (Node*)malloc(sizeof(Node));
+    newNode -> data = v;
+    newNode -> l = newNode -> r = NULL;
+    return newNode;
+}
+
+Node* insertNode(Node *root, int val)
+{
+    Node *newNode = createNode(val);
+    if (!root)
+        return newNode;
+    if (root -> data > val)
+        root -> l = insertNode(root -> l, val);
+    else if (root -> data < val)
+        root -> r = insertNode(root -> r, val);
+    return root;
+}
+
+Node* createTree(int n)
+{
+    printf("Enter the elements of the tree: ");
+    Node *root = NULL;
+    int v;
+    for (int i = 0; i < n; ++i)
+    {
+        scanf("%d", &v);
+        root = insertNode(root, v);
+    }
+    return root;
+}
+
+void inorder(Node *root)
+{
+    if (!root)  return;
+    inorder(root -> l);
+    printf("%d -- ", root -> data);
+    inorder(root -> r);
+}
+
+void preorder(Node *root)
+{
+    if (!root)  return;
+    printf("%d -- ", root -> data);
+    inorder(root -> l);
+    inorder(root -> r);
+}
+
+void postorder(Node *root)
+{
+    if (!root)  return;
+    inorder(root -> l);
+    inorder(root -> r);
+    printf("%d -- ", root -> data);
+}
+
+Node* findMin(Node *node)
+{
+    Node* x = node;
+    while (x!=NULL && x -> l!=NULL)
+    {
+        x = x -> l;
+    }
+    return x;
+}
+
+Node* findMax(Node *root)
+{
+    while (root -> r){
+        root = root -> r;
+    }
+    return root;
+}
+
+Node* delNode(Node *root, int val)
+{
+  if (root==NULL)  
+    return root;
+  if (root-> data > val)
+    root -> l = delNode(root -> l, val);
+ else if (root -> data < val)
+    root -> r = delNode(root -> r, val);
+  else
+  {
+    if (root->l==NULL && root->r==NULL)
+        return NULL;
+    else if(root->l==NULL)
+    {
+      Node* t = root-> r;
+      free(root);
+      return t;
+    }
+    else if (root ->r==NULL)
+    {
+     Node* t = root -> l;
+     free(root);
+     return t;
+    }
+    Node* tempNode = findMin(root-> r);
+    root->data=tempNode->data;
+    root->r=delNode(root->r,tempNode->data);
+  }
+  return root;
+}
+
+Node* inorderPredecessor(Node *root)
+{
+  return findMax(root->l);
+}
+Node* inorderSuccessor(Node *root)
+{
+  return findMin(root -> r);
+}
+
+int main()
+{
+    int n;
+    printf("Enter the total no.of elements to insert : ");
+    scanf("%d", &n);
+    Node *root = createTree(n);
+    printf("\nInorder:");
+    inorder(root);
+    printf("\nPreorder:");
+    preorder(root);
+    printf("\nPostorder");
+    postorder(root);
+    printf("\n");
+    int v;
+    printf("Enter an element to delete: ");
+    scanf("\n%d", &v);
+    root = delNode(root, v);
+    inorder(root);
+    Node *t1 = inorderSuccessor(root);
+    Node *t2 = inorderPredecessor(root);
+    printf("Inorder predecessor of %d is: %d\n", root->data, t2->data);
+    printf("Inorder successor of %d is: %d\n", root -> data, t1 -> data);
+}

@@ -1,0 +1,327 @@
+#include <stdio.h>
+#include<stdlib.h>
+struct node
+{
+    int data;
+    struct node* next;
+}*temp,*newnode,*t1,*t2,*head,*tail;
+void create()
+{
+    int value,n;
+    head=NULL;
+    printf("\nEnter the number of nodes in your linked list:");
+    scanf("%d",&n);
+    printf("\nEnter values:");
+    for(int i=0;i<n;i++)
+    {
+        newnode=(struct node*)malloc(sizeof(struct node));
+        scanf("\n%d",&value);
+        
+        newnode->data=value;
+        newnode->next=NULL;
+        if (head==NULL)
+        {
+            head=newnode;
+            tail=newnode;
+        }
+        else 
+        {
+            tail->next=newnode;
+            tail=newnode;
+        }
+    }
+    tail->next=head;
+}
+void display()
+{
+    temp=head;
+    printf("\nElements in the list are ");
+    while(temp->next!=head)
+    {
+        printf("%d ",temp->data);
+        temp=temp->next;
+    }
+    printf("%d ",tail->data);
+}
+void ins_beg()
+{
+    int value;
+    newnode=(struct node*)malloc(sizeof(struct node));
+    printf("\nEnter value to insert at beginning:");
+    scanf("%d",&value);
+    newnode->data=value;
+    newnode->next=head;
+    head=newnode;
+    tail->next=head;
+}
+void ins_end()
+{
+    int value;
+    newnode=(struct node*)malloc(sizeof(struct node));
+    printf("\nEnter value to insert at end:");
+    scanf("%d",&value);
+    newnode->data=value;
+    newnode->next=NULL;
+    tail->next=newnode;
+    tail=newnode;
+    tail->next=head;
+}
+void insert()
+{
+    int i,ele,pos,n=1;
+    temp=head;
+    while(temp->next!=head)
+    {
+        n++;
+        temp=temp->next;
+    }
+    printf("\nEnter position of insertion :");
+    scanf("%d",&pos);
+    if(pos==1)
+        return ins_beg();
+    else if(pos==n+1)
+        return ins_end();
+    else if(pos>n+1)
+        printf("\nWrong position");
+    else
+    {
+        printf("\nEnter element to insert :");
+        scanf("%d",&ele);
+        newnode=(struct node*)malloc(sizeof(struct node));
+        newnode->data=ele;
+        newnode->next=NULL;
+        for(i=1,temp=head;i<pos-1;i++)
+            temp=temp->next;
+        newnode->next=temp->next;
+        temp->next=newnode;
+    }
+}
+void Delete_pos(int pos)
+{
+    temp=head;
+    if(pos==1)
+    {
+        head=head->next;
+        free(temp);
+        tail->next=head;
+    }
+    else
+    {
+    for(int i=0;i<pos-2;i++)
+        temp=temp->next;
+    temp->next=temp->next->next;
+    }
+    temp=head;
+    while(temp->next!=head)
+        temp=temp->next;
+    tail=temp;
+    tail->next=head;
+}
+void Delete_ele()
+{
+    int ele;
+    printf("\nEnter element to delete:");
+    scanf("%d",&ele);
+    temp=head;
+    if(temp->data==ele)
+    {
+        head=head->next;
+        free(temp);
+    }
+    else if(temp->next->data==ele)
+    {
+        head->next=head->next->next;
+    }
+    else
+    {
+        while(temp->next->data!=ele)
+        {
+            temp=temp->next;
+        }
+    temp->next=temp->next->next;
+    }
+    temp=head;
+    while(temp->next!=NULL)
+        temp=temp->next;
+    tail=temp;
+    tail->next=head;
+}
+void remove_dup()
+{
+    tail->next=NULL;
+    struct node *t=head,*i=NULL,*temp=NULL;
+    if(head==NULL)
+        return;
+    else
+    {
+        while(t!=NULL)
+        {
+            temp=t;
+            i=t->next;
+            while(i!=NULL)
+            {
+                if(t->data==i->data)
+                    temp->next=i->next;
+                else
+                    temp=i;
+                i=i->next;
+            }
+            t=t->next;
+        }
+    }
+    temp=head;
+    while(temp->next!=NULL)
+        temp=temp->next;
+    tail=temp;
+    tail->next=head;
+}
+
+void sort()
+{
+    tail->next=NULL;
+    int Swp;
+    t1=head;
+    while(t1->next!=NULL)
+    {
+        t2=t1->next;
+        while(t2!=NULL)
+        {
+            if(t1->data > t2->data)
+            {
+                Swp=t2->data;
+                t2->data=t1->data;
+                t1->data=Swp;
+            }
+            t2=t2->next;
+        }
+        t1=t1->next;
+    }
+    temp=head;
+    while(temp->next!=NULL)
+        temp=temp->next;
+    tail=temp;
+    tail->next=head;
+}
+void insert_app_pos()
+{
+    sort(head);
+    temp=head;
+    int ele;
+    printf("\nEnter element to insert at appropriate position:");
+    scanf("%d",&ele);
+    newnode=(struct node*)malloc(sizeof(struct node));
+    newnode->data=ele;
+    newnode->next=NULL;
+    if(head->data>ele)
+    {
+        newnode->next=head;
+        head=newnode;
+    }
+    if(tail->data>ele){
+        while(temp->next->data<ele&&temp->next!=tail)
+            temp=temp->next;
+        newnode->next=temp->next;
+        temp->next=newnode;
+    }
+    if(tail->data<ele)
+    {
+        tail->next=newnode;
+        tail=newnode;
+        tail->next=head;
+    }
+}
+void detectcycle()
+{
+	if(tail->next==head)
+		printf("\nCycle detected");
+	else
+		printf("\nNo cycle has been detected");
+}
+int main() 
+{
+    int ch;
+    while(1)
+    {
+        //printf("\n1)Create new linked list\n2)Display a linked list \n3)Insert at beginning \n4)Insert at tail of linked list \n5)Insert node at a specific position of a linked list\n6)Insert node at appropriate position in a sorted linked list\n7)Delete node from a linked list based on position\n8)Delete node from a linked list based on value\n9)Delete duplicate nodes from a linked list\n10)sort\n11)Exit the program\nEnter your choice:");
+        scanf("%d",&ch);
+        switch(ch)
+        {
+            case 1:
+                create();
+                break;
+            case 2:
+                    display();
+                    break;
+            case 3:
+                ins_beg();
+                display();
+                break;
+            case 4:
+                ins_end();
+                display();
+                break;
+            case 5:
+                insert();
+                display();
+                break;
+            case 6:
+                insert_app_pos();
+                display();
+                break;
+            case 7:
+                int pos;
+                printf("\nEnter position to delete:");
+                scanf("%d",&pos);
+                Delete_pos(pos);
+                display();
+                break;
+            case 8:
+                Delete_ele();
+                display();
+                break;
+            case 9:
+                remove_dup();
+                display();
+                break;
+            case 10:
+                sort();
+		display();
+                break;
+            case 11:
+                exit(0);
+            default:
+                exit(0);
+        }
+    }
+}
+1
+Enter the number of nodes in your linked list:7
+Enter values:1 7 2 6 3 5 4
+2
+Elements in the list are 1 7 2 6 3 5 4 
+3
+Enter value to insert at beginning:8
+Elements in the list are 8 1 7 2 6 3 5 4 
+10
+Elements in the list are 1 2 3 4 5 6 7 8 
+6
+Enter element to insert at appropriate position:5
+Elements in the list are 1 2 3 4 5 5 6 7 8 
+4
+Enter value to insert at end:4
+Elements in the list are 1 2 3 4 5 5 6 7 8 4 
+5
+Enter position of insertion :3
+Enter element to insert :3
+Elements in the list are 1 2 3 3 4 5 5 6 7 8 4 
+7
+Enter position to delete:1
+Elements in the list are 2 3 3 4 5 5 6 7 8 4 
+8
+Enter element to delete:2
+Elements in the list are 3 3 4 5 5 6 7 8 4 
+9
+Elements in the list are 3 4 5 6 7 8 
+11
+Cycle detected
+12

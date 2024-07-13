@@ -1,0 +1,54 @@
+int maxEvents(int** a, int n, int* eventsColSize){
+    int maxv=0;
+    for (int i=0;i<n-1;i++){
+        for(int j=0;j<n-i-1;j++){
+            if ((a[j][0]>a[j+1][0])||((a[j][0]==a[j+1][0])&&(a[j][1]>a[j+1][1]))){
+                int temp=a[j][0];
+                a[j][0]=a[j+1][0];
+                a[j+1][0]=temp;
+                temp=a[j][1];
+                a[j][1]=a[j+1][1];
+                a[j+1][1]=temp;
+            }
+        }
+    }
+    for (int i=0;i<n;i++){
+        printf("%d %d \n",a[i][0],a[i][1]);
+    }
+    int *s;
+    s=(int*)malloc(n*sizeof(int));
+    for(int i=0;i<n;i++){
+        s[i]=a[i][1]-a[i][0];
+        if(a[i][1]>maxv){
+            maxv=a[i][1];   
+        }
+    }
+    int ec=0;
+    for(int i=0;i<n;i++){
+        if(s[i]==0){
+            ec+=1;
+        }
+    }
+    for(int i=0;i<n;i++){
+        if(s[i]>0){
+            int x=a[i][0]-1;
+            int y=a[i][1]-1;
+            printf("s=%d x=%d y=%d \n",s[i] ,x,y);
+            for(int k=x;k<=y && k<n;k++){
+                if (s[k]>0){
+                    s[k]=0;
+                    ec+=1;
+                    break;
+                }
+            }
+        }
+    }
+    for (int i=0;i<n;i++){
+        printf("%d ",s[i]);
+    }
+    printf("\nmaxv=%d\nec=%d ",maxv,ec);
+    if(maxv<ec){
+        return maxv;
+    }
+    return ec;
+}

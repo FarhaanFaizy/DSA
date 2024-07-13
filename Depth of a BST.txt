@@ -1,0 +1,61 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct node
+{
+    int data;
+    struct node *r,*l;
+}*newnode;
+typedef struct node N;
+N* makenew(int ele)
+{
+    newnode=(N*)malloc(sizeof(N));
+    newnode->r=NULL;
+    newnode->l=NULL;
+    newnode->data=ele;
+    return newnode;
+}
+N* insert(N* head,int ele)
+{
+    if(head==NULL)
+        return makenew(ele);
+    else if(ele>head->data) 
+        head->r=insert(head->r,ele);
+    else 
+        head->l=insert(head->l,ele);
+    return head;
+}
+int max(int a,int b)
+{
+    if(a>b)
+        return a;
+    return b;
+}
+int level(N* head)
+{
+    int lh,rh;
+    if(head==NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        lh=level(head->l);
+        rh=level(head->r);
+    }
+    return max(lh,rh)+1;
+}
+/*void display()
+{
+    
+}*/
+int main()
+{
+    N* head=NULL;
+    int a[]={20,12,25,10,14,23,28,7,15,26};
+    for(int i=0;i<10;i++)
+    {
+        head=insert(head,a[i]);
+    }
+    int lev=level(head);
+    printf("\n%d",lev);
+}

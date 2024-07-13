@@ -1,0 +1,177 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct node
+{
+    int c,e;
+    struct node* next;
+}*head,*tail,*n,*temp,*t1,*t2;
+typedef struct node N;
+void display(N* p)
+{
+    temp=p;
+    while(temp->next!=NULL)
+    {
+        printf("%d(x^%d)+",temp->c,temp->e);
+        temp=temp->next;
+    }
+    if(temp->e==0)
+        printf("%d",temp->c);
+    else
+        printf("%d(x^%d)",temp->c,temp->e);
+}
+N* create()
+{
+    int ch=0,c,e;
+    head=NULL;
+    tail=NULL;
+    do
+    {
+        n=(N*)malloc(sizeof(N));
+        printf("Enter coefficient and exponent:");
+        scanf("%d%d",&c,&e);
+        n->c=c;
+        n->e=e;
+        n->next=NULL;
+        if(head==NULL)
+        {
+            head=n;
+            tail=n;
+        }
+        else
+        {
+            tail->next=n;
+            tail=n;
+        }
+        printf("Enter 1 to add more terms in the polynomial:");
+        scanf("%d",&ch);
+    }while(ch==1);
+    return head;
+}
+N* add(N* p1,N* p2){
+    N* p=NULL;
+    N* q=NULL;
+    t1=p1;t2=p2;
+    if(t1==NULL&&t2==NULL)
+        return p;
+    else if(t1==NULL)
+        return t2;
+    else if(t2==NULL)
+        return t1;
+    else
+    {
+        while(t1!=NULL)
+        {
+           while(t2!=NULL)
+           {
+                if(t1->e==t2->e)
+                {
+                    n=(N*)malloc(sizeof(N));
+                    n->next=NULL;
+                    n->e=t1->e;
+                    n->c=t1->c+t2->c;
+                    if(p==NULL)
+                    {
+                        p=n;
+                        q=n;
+                    }
+                    else
+                    {
+                        q->next=n;
+                        q=n;
+                    }
+                }
+                t2=t2->next;
+           }
+           t1=t1->next;
+           t2=p2;
+        }
+    }
+    return p;
+}
+N* mul(N* p1,N* p2)
+{
+    N* p=NULL;
+    N* q=NULL;
+    int et,ct;
+    t1=p1;
+    t2=p2;
+    while(t1!=NULL)
+    {
+        while(t2!=NULL)
+        {
+            n=(N*)malloc(sizeof(N));
+            n->next=NULL;
+            n->c=t1->c*t2->c;
+            n->e=t1->e+t2->e;
+            if(p==NULL&&q==NULL)
+            {
+                p=n;
+                q=n;
+            }
+            else
+            {
+                q->next=n;
+                q=n;
+            }
+            t2=t2->next;
+        }
+        t1=t1->next;
+        t2=p2;
+    }
+    t1=p;
+    t2=t1;
+    while(t1!=NULL)
+    {
+        while(t2->next!=NULL)
+        {
+            if(t2->next->e==t1->e)
+            {
+                t1->c+=t2->next->c;
+                q=t2->next;
+                t2->next=t2->next->next;
+                free(q);
+            }
+            t2=t2->next;
+        }
+        t1=t1->next;
+        t2=t1;
+    }
+    return p;
+}
+int main()
+{
+    N *p1,*p2,*p3;
+    int ch;
+    while(1)
+    {
+        //printf("\n1)Create polynomials\n2)Display p1 and p2\n3)Add\n4)Multiply\n5)Exit\n");
+        scanf("%d",&ch);
+        switch(ch)
+        {
+            case 1:
+                printf("\nCreating polynomial p1\n");
+                p1=create();
+                printf("\nCreating polynomial p2\n");
+                p2=create();
+                break;
+            case 2:
+                printf("\nPolynomial 1=");
+                display(p1);
+                printf("\nPolynomial 2=");
+                display(p2);
+                break;
+            case 3:
+                p3=add(p1,p2);
+                printf("\np1+p2=");
+                display(p3);
+                break;
+            case 4:
+                p3=mul(p1,p2);
+                printf("\np1xp2=");
+                display(p3);
+                break;
+            case 5:
+                exit(0);
+        }
+    }
+}
